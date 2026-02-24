@@ -29,6 +29,15 @@ export default function QueryProcessor(query: string): string {
             return sum.toString();
         }
     }
+    // Subtraction
+    if (lower.includes("minus")) {
+        const numbers = query.match(/\d+/g);
+        if (numbers && numbers.length >= 2) {
+            const result = parseInt(numbers[0]) - parseInt(numbers[1]);
+            return result.toString();
+        }
+    }
+
     // Multiplication questions
     if (lower.includes("multiplied by")) {
         const numbers = query.match(/\d+/g);
@@ -50,6 +59,26 @@ export default function QueryProcessor(query: string): string {
             }
         }
     }
+    // Prime numbers
+    if (lower.includes("prime")) {
+        const numbers = query.match(/\d+/g);
+        if (numbers) {
+            const isPrime = (n: number): boolean => {
+                if (n < 2) return false;
+                for (let i = 2; i <= Math.sqrt(n); i++) {
+                    if (n % i === 0) return false;
+                }
+                return true;
+            };
+
+            const primes = numbers
+                .map(n => parseInt(n))
+                .filter(n => isPrime(n));
+
+            return primes.join(", ");
+        }
+    }
+
 
 
 
