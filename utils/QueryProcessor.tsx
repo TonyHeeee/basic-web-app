@@ -1,6 +1,28 @@
 export default function QueryProcessor(query: string): string {
 
     const lower = query.toLowerCase();
+        // Complex arithmetic expression
+    if (
+        lower.includes("plus") ||
+        lower.includes("minus") ||
+        lower.includes("multiplied by") ||
+        lower.includes("divided by")
+    ) {
+        let expression = lower
+            .replace("what is", "")
+            .replace(/\?/g, "")
+            .replace(/multiplied by/g, "*")
+            .replace(/divided by/g, "/")
+            .replace(/plus/g, "+")
+            .replace(/minus/g, "-");
+
+        try {
+            const result = Function(`"use strict"; return (${expression})`)();
+            return result.toString();
+        } catch {
+            return "";
+        }
+    }
 
     // Shakespeare
     if (lower.includes("shakespeare")) {
