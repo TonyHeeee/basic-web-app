@@ -18,25 +18,31 @@ export default function QueryProcessor(query: string): string {
 
     // Andrew ID
     if (lower.includes("andrew id")) {
-        return "donglinh"; // ← 改成你自己的
+        return "donglinh";
     }
 
-    // Addition questions
+    // Addition (supports multiple numbers)
     if (lower.includes("plus")) {
         const numbers = query.match(/\d+/g);
-        if (numbers && numbers.length >= 2) {
-            const sum = parseInt(numbers[0]) + parseInt(numbers[1]);
+        if (numbers) {
+            const sum = numbers
+                .map(n => parseInt(n))
+                .reduce((acc, curr) => acc + curr, 0);
             return sum.toString();
         }
     }
-    // Subtraction
+
+   // Subtraction (supports multiple)
     if (lower.includes("minus")) {
         const numbers = query.match(/\d+/g);
-        if (numbers && numbers.length >= 2) {
-            const result = parseInt(numbers[0]) - parseInt(numbers[1]);
+        if (numbers && numbers.length > 0) {
+            const result = numbers
+                .map(n => parseInt(n))
+                .reduce((acc, curr) => acc - curr);
             return result.toString();
         }
     }
+
 
     // Multiplication questions
     if (lower.includes("multiplied by")) {
@@ -90,6 +96,23 @@ export default function QueryProcessor(query: string): string {
             return Math.max(...nums).toString();
         }
     }
+    // Power support
+    if (lower.includes("to the power of")) {
+        const numbers = query.match(/\d+/g);
+        if (numbers && numbers.length >= 2) {
+            const base = BigInt(numbers[0]);
+            const exponent = parseInt(numbers[1]);
+
+            let result = BigInt(1);
+            for (let i = 0; i < exponent; i++) {
+                result *= base;
+            }
+
+            return result.toString();
+        }
+    }
+
+
 
     return "";
 }
