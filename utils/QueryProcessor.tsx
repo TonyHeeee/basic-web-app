@@ -1,7 +1,25 @@
 export default function QueryProcessor(query: string): string {
 
     const lower = query.toLowerCase();
-        // Complex arithmetic expression
+    // Anagram
+    if (lower.includes("anagram of")) {
+        const m = lower.match(/anagram of ([a-z]+): (.+)\??$/);
+        if (m) {
+            const target = m[1];
+            const options = m[2].split(",").map(s => s.trim());
+
+            const norm = (s: string) => s.split("").sort().join("");
+
+            const targetNorm = norm(target);
+            for (const opt of options) {
+                if (norm(opt) === targetNorm) {
+                    return opt;
+                }
+            }
+        }
+    }
+
+    // Complex arithmetic expression
     if (
         lower.includes("plus") ||
         lower.includes("minus") ||
@@ -106,6 +124,31 @@ export default function QueryProcessor(query: string): string {
             return primes.join(", ");
         }
     }
+    // Scrabble score
+    if (lower.includes("scrabble score")) {
+        const wordMatch = lower.match(/of ([a-z]+)/);
+        if (wordMatch) {
+            const word = wordMatch[1];
+
+            const scores: { [key: string]: number } = {
+                a:1,e:1,i:1,o:1,u:1,l:1,n:1,s:1,t:1,r:1,
+                d:2,g:2,
+                b:3,c:3,m:3,p:3,
+                f:4,h:4,v:4,w:4,y:4,
+                k:5,
+                j:8,x:8,
+                q:10,z:10
+            };
+
+            let total = 0;
+            for (const char of word) {
+                total += scores[char] || 0;
+            }
+
+            return total.toString();
+        }
+    }
+
 
 
 
