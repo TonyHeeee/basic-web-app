@@ -29,6 +29,29 @@ export default function QueryProcessor(query: string): string {
             return sum.toString();
         }
     }
+    // Multiplication questions
+    if (lower.includes("multiplied by")) {
+        const numbers = query.match(/\d+/g);
+        if (numbers && numbers.length >= 2) {
+            const product = parseInt(numbers[0]) * parseInt(numbers[1]);
+            return product.toString();
+        }
+    }
+    // Square and cube (6th power)
+    if (lower.includes("square") && lower.includes("cube")) {
+        const numbers = query.match(/\d+/g);
+        if (numbers) {
+            for (const n of numbers) {
+                const num = parseInt(n);
+                const root = Math.round(Math.pow(num, 1/6));
+                if (Math.pow(root, 6) === num) {
+                    return num.toString();
+                }
+            }
+        }
+    }
+
+
 
     // Largest number questions
     if (lower.includes("largest")) {
